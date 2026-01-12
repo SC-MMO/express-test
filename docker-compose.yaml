@@ -1,0 +1,7 @@
+services:
+  node-application:
+    build: ./express/
+    container_name: node-application
+    ports:
+      - "3000:3000"
+    restart: always
