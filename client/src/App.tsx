@@ -34,7 +34,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <p>fruit is {array[count % 20]}</p>
+        <p>fruit is {array[count % array.length]}</p>
       </div>
       <Box sx={{ width: 200, margin: "0 auto" }}>
         <Stack spacing={2} direction="row" sx={{ alignItems: "center", mb: 1 }}>
