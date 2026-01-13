@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -8,17 +7,43 @@ import Slider from "@mui/material/Slider";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
 
+import { callAPI } from "./Helpers";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+
 function Test() {
+  // tmp create user
+  async function createUser() {
+    const response = await callAPI("post", "create_user", {
+      name: "Moritz",
+      email: "moritz.mummert@scaltel.de",
+    });
+  }
+
   const [count, setCount] = useState(0);
   const [array, setArray] = useState([]);
 
-  const fetchAPI = async () => {
-    const response = await axios.get("http://10.12.19.19:3000/api");
+  const [users, setUsers] = useState([]);
+
+  const fetchFruits = async () => {
+    const response = await callAPI("get", "fruits");
     setArray(response.data.fruits);
   };
 
+  const fetchUsers = async () => {
+    const response = await callAPI("get", "users");
+    setUsers(response.data);
+  };
+
   useEffect(() => {
-    fetchAPI();
+    fetchFruits();
+    //createUser();
+    fetchUsers();
   }, []);
 
   const [volume, setVolume] = React.useState<number>(30);
@@ -43,6 +68,15 @@ function Test() {
         </Stack>
         at {volume}%
       </Box>
+      <h1>Users:</h1>
+      <ul>
+        {users.map((user) => (
+          <div key={user.id}>
+            {user.name} ({user.email}) since{" "}
+            {new Date(user.createdAt).toLocaleString()}
+          </div>
+        ))}
+      </ul>
     </>
   );
 }

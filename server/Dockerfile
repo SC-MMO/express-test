@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:24-alpine
 
 WORKDIR /server
 
@@ -8,4 +8,4 @@ RUN npm install -g pnpm && pnpm install
 
 COPY . .
 
-CMD ["pnpm", "run", "dev"]
+CMD ["sh", "-c", "npx prisma migrate dev --name init && npx prisma migrate deploy && npx prisma generate && pnpm run dev"]
