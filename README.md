@@ -1,6 +1,6 @@
-## Express JS Test
+## Express Test
 
-This website is designed to learn & understand how express + react works (ts versions)
+This project is being created to learn & understand how express + react works (ts versions)
 
 
 ## Deployment
