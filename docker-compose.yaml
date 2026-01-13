@@ -1,7 +1,16 @@
 services:
-  node-application:
-    build: ./express/
-    container_name: node-application
+  server:
+    build: 
+      context: ./server/
+      dockerfile: Dockerfile
+    container_name: express-backend
     ports:
       - "3000:3000"
-    restart: always
+
+  client:
+    build: 
+      context: ./client/
+      dockerfile: Dockerfile
+    container_name: react-frontend
+    ports:
+      - "5173:5173"
