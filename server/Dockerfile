@@ -8,4 +8,4 @@ RUN npm install -g pnpm && pnpm install
 
 COPY . .
 
-CMD ["sh", "-c", "npx prisma migrate dev --name init && npx prisma migrate deploy && npx prisma generate && pnpm run dev"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma migrate deploy && npx prisma generate && pnpm run dev"]

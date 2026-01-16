@@ -8,41 +8,26 @@ import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
 
 import { callAPI } from "./Helpers";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  createdAt: Date;
-}
+import type { User } from "./Types";
 
 function Test() {
-  // tmp create user
-  async function createUser() {
-    const response = await callAPI("post", "create_user", {
-      name: "Moritz",
-      email: "moritz.mummert@scaltel.de",
-    });
-  }
-
   const [count, setCount] = useState(0);
   const [array, setArray] = useState([]);
 
   const [users, setUsers] = useState([]);
 
   const fetchFruits = async () => {
-    const response = await callAPI("get", "fruits");
+    const response = await callAPI("get", "/fruits");
     setArray(response.data.fruits);
   };
 
   const fetchUsers = async () => {
-    const response = await callAPI("get", "users");
+    const response = await callAPI("get", "/users");
     setUsers(response.data);
   };
 
   useEffect(() => {
     fetchFruits();
-    //createUser();
     fetchUsers();
   }, []);
 
@@ -70,9 +55,9 @@ function Test() {
       </Box>
       <h1>Users:</h1>
       <ul>
-        {users.map((user) => (
+        {users.map((user: User) => (
           <div key={user.id}>
-            {user.name} ({user.email}) since{" "}
+            {user.username} ({user.email}) since{" "}
             {new Date(user.createdAt).toLocaleString()}
           </div>
         ))}

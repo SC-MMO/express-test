@@ -13,18 +13,28 @@ datasource db {
   provider = "postgresql"
 }
 
+
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String
-  scores    Score[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  email     String    @unique
+  password  String    @default("")
+  username  String    @unique
+  posts     Post[]
 }
 
-model Score {
-  id        Int       @id @default(autoincrement())
-  score     Int
-  time      DateTime  @default(now())
-  scorer    User      @relation(fields: [scorerId], references: [id])
-  scorerId  Int
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+
 }
