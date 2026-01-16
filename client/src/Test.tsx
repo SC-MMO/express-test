@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -8,17 +7,28 @@ import Slider from "@mui/material/Slider";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
 
+import { callAPI } from "./Helpers";
+import type { User } from "./Types";
+
 function Test() {
   const [count, setCount] = useState(0);
   const [array, setArray] = useState([]);
 
-  const fetchAPI = async () => {
-    const response = await axios.get("http://10.12.19.19:3000/api");
+  const [users, setUsers] = useState([]);
+
+  const fetchFruits = async () => {
+    const response = await callAPI("get", "/fruits");
     setArray(response.data.fruits);
   };
 
+  const fetchUsers = async () => {
+    const response = await callAPI("get", "/users");
+    setUsers(response.data);
+  };
+
   useEffect(() => {
-    fetchAPI();
+    fetchFruits();
+    fetchUsers();
   }, []);
 
   const [volume, setVolume] = React.useState<number>(30);
@@ -43,6 +53,15 @@ function Test() {
         </Stack>
         at {volume}%
       </Box>
+      <h1>Users:</h1>
+      <ul>
+        {users.map((user: User) => (
+          <div key={user.id}>
+            {user.username} ({user.email}) since{" "}
+            {new Date(user.createdAt).toLocaleString()}
+          </div>
+        ))}
+      </ul>
     </>
   );
 }
