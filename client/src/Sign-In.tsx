@@ -11,9 +11,9 @@ function SignIn() {
   }) => {
     const response = await callAPI("post", "/login", formData);
     if (response.status === 200) {
-      navigate("/");
+      window.location.href = "/";
     } else {
-      navigate("/sign-in");
+      window.location.reload();
     }
   };
 

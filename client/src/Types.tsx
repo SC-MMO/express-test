@@ -12,4 +12,9 @@ interface Post {
   authorId: number;
 }
 
-export type { User, Post };
+interface AuthResponse {
+  authenticated: boolean;
+  user: User;
+}
+
+export type { User, Post, AuthResponse };
