@@ -3,12 +3,28 @@ import { Card, TextField, Button, Typography } from "@mui/material";
 import { callAPI } from "./Helpers";
 
 function SignUp() {
-  const handleSignUp = (formData: {
+  const handleSignUp = async (formData: {
     username: string;
     email: string;
     password: string;
   }) => {
-    callAPI("post", "/create_user", formData);
+    const create_response = await callAPI("post", "/create_user", formData);
+    if (create_response.status === 201) {
+      const new_form_data = {
+        identifier: formData.username,
+        password: formData.password,
+      };
+      const login_response = await callAPI("post", "/login", new_form_data);
+      if (login_response.status === 200) {
+        window.location.href = "/";
+      } else {
+        console.log(login_response);
+        //window.location.href = "/sign-in";
+      }
+    } else {
+      console.log(create_response);
+      //window.location.reload();
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

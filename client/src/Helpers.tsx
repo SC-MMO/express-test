@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
 const callAPI = async (method: string, endpoint: string, data?: any) => {
   try {
@@ -34,4 +34,9 @@ const PrivateRoutes = () => {
   return auth?.token ? <Outlet /> : <Navigate to="/sign-in" replace />;
 };
 
-export { callAPI, PrivateRoutes };
+async function logout() {
+  await callAPI("post", "/logout");
+  window.location.reload();
+}
+
+export { callAPI, PrivateRoutes, logout };

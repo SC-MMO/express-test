@@ -68,7 +68,7 @@ router.get(
   },
 );
 
-router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
   req.logout(function (err) {
     if (err) return next(err);
 
@@ -149,16 +149,21 @@ router.post(
 
 router.post("/create_user", async (req: Request, res: Response) => {
   const hashedPsw = await bcrypt.hash(req.body.password, 10);
-  const user = await prisma.user.create({
-    data: {
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPsw,
-    },
-  });
 
-  console.log("Created user:", user.username);
-  res.json(user);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPsw,
+      },
+    });
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to create user" });
+  }
 });
 
 export { router };
