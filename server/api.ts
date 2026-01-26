@@ -3,6 +3,7 @@ import { prisma } from "./lib/prisma";
 import bcrypt from "bcrypt";
 import { strategy } from "./passport";
 import passport from "passport";
+import { UserModel } from "./generated/prisma/models";
 
 function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated && req.isAuthenticated()) {
@@ -83,7 +84,6 @@ router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
 
 router.get("/me", (req: Request, res: Response) => {
   if (req.isAuthenticated && req.isAuthenticated()) {
-    console.log(req.user);
     res.json({
       authenticated: true,
       user: req.user,
@@ -127,6 +127,7 @@ router.post(
   async (req: Request, res: Response) => {
     const title = req.body.title;
     const content = req.body.content;
+    const user = req.user as UserModel;
 
     try {
       const post = await prisma.post.create({
@@ -134,7 +135,7 @@ router.post(
           title: title,
           content: content,
           author: {
-            connect: { id: 1 }, //req.user?.id },
+            connect: { id: user.id },
           },
         },
       });
