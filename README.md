@@ -53,7 +53,7 @@ This project is being created to learn & understand how express + react works (t
 
 ### Posts
 - **URL:** `:5173/posts`
-- **Description:** Products Page
+- **Description:** Posts Page
 - **Nested Routes:** `/car` and `/bike`
 
 ### Test
