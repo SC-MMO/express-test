@@ -23,20 +23,20 @@ function App() {
         {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/products" element={<Products />}>
-            <Route path="car" element={<CarProducts />} />
-            <Route path="bike" element={<BikeProducts />} />
-          </Route>
-          <Route element={<PrivateRoutes />}>
-            <Route path="/test" element={<Test />} />
-          </Route>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
 
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/posts" element={<Posts />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/products" element={<Products />}>
+              <Route path="car" element={<CarProducts />} />
+              <Route path="bike" element={<BikeProducts />} />
+            </Route>
+          </Route>
         </Routes>
 
         <Menu />

@@ -8,6 +8,8 @@ import * as React from "react";
 import Modal from "@mui/material/Modal";
 import { Card, TextField, Button, Typography } from "@mui/material";
 
+import { PostBlock } from "./Block";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -52,13 +54,12 @@ function Posts() {
     const form = event.currentTarget;
 
     const formData = {
-      title: (form.elements.namedItem("content") as HTMLInputElement).value,
+      title: (form.elements.namedItem("title") as HTMLInputElement).value,
       content: (form.elements.namedItem("content") as HTMLInputElement).value,
     };
 
     handlePostCreation(formData);
   };
-
   return (
     <>
       <div>
@@ -83,6 +84,7 @@ function Posts() {
                 placeholder="eg. 'Update on my life'"
                 fullWidth
                 autoFocus
+                required
               />
 
               <TextField
@@ -94,6 +96,7 @@ function Posts() {
                 rows={6}
                 fullWidth
                 placeholder="eg. 'So to start...'"
+                required
               />
 
               <Button
@@ -115,14 +118,17 @@ function Posts() {
       <ul>
         {posts.map((post: Post) => (
           <Container key={post.id}>
-            {post.title} {post.content}
+            <PostBlock
+              title={post.title}
+              content={`${post.author.username} ${post.content}`}
+            />
           </Container>
         ))}
       </ul>
       <Button
         color="primary"
         variant="contained"
-        sx={{ position: "absolute", top: "90%", right: "10%" }}
+        sx={{ position: "fixed", top: "90%", right: "10%" }}
         onClick={handleOpen}
       >
         Create Post

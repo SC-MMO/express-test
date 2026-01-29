@@ -3,6 +3,7 @@ import { prisma } from "./lib/prisma";
 import bcrypt from "bcrypt";
 import { strategy } from "./passport";
 import passport from "passport";
+import { UserModel } from "./generated/prisma/models";
 
 function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated && req.isAuthenticated()) {
@@ -68,28 +69,40 @@ router.get(
   },
 );
 
-router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
-  req.logout(function (err) {
-    if (err) return next(err);
+router.post(
+  "/logout",
+  ensureAuthenticated,
+  (req: Request, res: Response, next: NextFunction) => {
+    req.logout(function (err) {
+      if (err) return next(err);
 
-    req.session?.destroy((err) => {
-      if (err) {
-        console.log("Failed to destroy session during logout:", err);
-      }
-      res.json({ message: "Logged out successfully" });
+      req.session?.destroy((err) => {
+        if (err) {
+          console.log("Failed to destroy session during logout:", err);
+        }
+        res.json({ message: "Logged out successfully" });
+      });
     });
-  });
-});
+  },
+);
 
 router.get("/me", (req: Request, res: Response) => {
   if (req.isAuthenticated && req.isAuthenticated()) {
-    console.log(req.user);
     res.json({
       authenticated: true,
       user: req.user,
     });
   } else {
     return res.status(401).json({ authenticated: false });
+  }
+});
+
+router.get("/user", async (req: Request, res: Response) => {
+  const user = await prisma.user.findUnique({ where: { id: req.body.id } });
+  if (user) {
+    res.json({ id: user.id, username: user.username });
+  } else {
+    return res.status(401).json({ id: null, username: null });
   }
 });
 
@@ -113,7 +126,11 @@ router.get(
   ensureAuthenticated,
   async (req: Request, res: Response) => {
     try {
-      const posts = await prisma.post.findMany();
+      const posts = await prisma.post.findMany({
+        include: {
+          author: true,
+        },
+      });
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: "Error while fetching posts" });
@@ -127,6 +144,7 @@ router.post(
   async (req: Request, res: Response) => {
     const title = req.body.title;
     const content = req.body.content;
+    const user = req.user as UserModel;
 
     try {
       const post = await prisma.post.create({
@@ -134,7 +152,7 @@ router.post(
           title: title,
           content: content,
           author: {
-            connect: { id: 1 }, //req.user?.id },
+            connect: { id: user.id },
           },
         },
       });
