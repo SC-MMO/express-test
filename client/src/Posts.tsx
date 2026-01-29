@@ -118,14 +118,17 @@ function Posts() {
       <ul>
         {posts.map((post: Post) => (
           <Container key={post.id}>
-            <PostBlock title={post.title} content={post.content} />
+            <PostBlock
+              title={post.title}
+              content={`${post.author.username} ${post.content}`}
+            />
           </Container>
         ))}
       </ul>
       <Button
         color="primary"
         variant="contained"
-        sx={{ position: "absolute", top: "90%", right: "10%" }}
+        sx={{ position: "fixed", top: "90%", right: "10%" }}
         onClick={handleOpen}
       >
         Create Post
